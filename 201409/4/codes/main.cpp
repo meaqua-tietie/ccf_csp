@@ -1,0 +1,84 @@
+#include <bits/stdc++.h>
+
+using i64 = long long;
+
+struct Node {
+	int x, y;
+	int step;
+};
+
+const int dirs[4][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+
+void bfs(
+	std::queue<Node> &queue,
+	std::vector<std::vector<int>> &mat,
+	std::vector<std::vector<bool>> &vis,
+	int n, int customer, int &res) {
+	while (!queue.empty()) {
+		Node cur = queue.front();
+		queue.pop();
+
+		for (int i = 0; i < 4; ++i) {
+			int x = cur.x + dirs[i][0];
+			int y = cur.y + dirs[i][1];
+			Node next = {x, y, cur.step + 1};
+			if (x >= 0 && x < n && y >= 0 && y < n && vis[x][y] == false) {
+				if (mat[x][y] > 0) {
+					res += mat[x][y] * next.step;
+					if (--customer == 0) {
+						return;
+					}
+				}
+				vis[x][y] = true;
+				queue.push(next);
+			}
+		}
+	}
+}
+
+int main(void) {
+	std::ios::sync_with_stdio(false);
+	std::cin.tie(nullptr);
+
+	int n, m, k, d;
+	std::cin >> n >> m >> k >> d;
+
+	std::vector mat(n, std::vector<int>(n));
+	std::vector vis(n, std::vector<bool>(n));
+	std::queue<Node> queue;
+	for (int i = 0; i < m; ++i) {
+		int x, y;
+		std::cin >> x >> y;
+		--x;
+		--y;
+		queue.push({x, y, 0});
+		vis[x][y] = true;
+	}
+
+	int customer = 0;
+	for (int i = 0; i < k; ++i) {
+		int x, y, cnt;
+		std::cin >> x >> y >> cnt;
+		--x;
+		--y;
+		if (mat[x][y] == 0) {
+			++customer;
+		}
+		mat[x][y] += cnt;
+	}
+
+	for (int i = 0; i < d; ++i) {
+		int x, y;
+		std::cin >> x >> y;
+		--x;
+		--y;
+		vis[x][y] = true;
+	}
+
+	int res = 0;
+	bfs(queue, mat, vis, n, customer, res);
+
+	std::cout << res << "\n";
+	
+	return 0;
+}
