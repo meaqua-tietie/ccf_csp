@@ -1,41 +1,52 @@
-/* CCF201409-2 画图 */
- 
 #include <iostream>
-#include <cstring>
  
 using namespace std;
  
-const int N = 100;
- 
-bool flag[N+1][N+1];
+const int N = 500;
+int a[N][N];
  
 int main()
 {
-    int n, x1, y1, x2, y2, sum=0;
+    int n, x, y;
  
-    // 变量初始化
-    memset(flag, false, sizeof(flag));
- 
-    // 输入数据，计算处理
+    // 输入数据
     cin >> n;
-    for(int i=1; i<=n; i++) {
-        // 输入数据
-        cin >> x1 >> y1 >> x2 >> y2;
+    for(int i=0; i<n; i++)
+        for(int j=0; j<n; j++)
+            cin >> a[i][j];
  
-        // 累加面积
-        sum += (x2 - x1) * (y2 - y1);
+    // 输出左上三角
+    x = 0;
+    y = 0;
+    for(int i=0; i<n; i++)
+        if(i & 1) {
+            for(int j=0; j<i; j++)
+                cout << a[x++][y--] << " ";
+            cout << a[x++][y] << " ";
+        } else {
+            for(int j=0; j<i; j++)
+                cout << a[x--][y++] << " ";
+            cout<< a[x][y++] << " ";
+        }
  
-        // 标记和去除重叠部分
-        for(int i=x1; i<x2; i++)
-            for(int j=y1; j<y2; j++) {
-                if(flag[i][j])
-                    sum--;
-                flag[i][j] = true;
-            }
-    }
+    // 输出右下三角
+    if(n & 1)
+        y--, x++;
+    else
+        y++, x--;
+    for(int i=n-2; i>0; i--)
+        if(i & 1) {
+            for(int j=0; j<i; j++)
+                cout << a[x++][y--] << " ";
+            cout << a[x][y++] << " ";
+        } else {
+            for(int j=0; j<i; j++)
+                cout << a[x--][y++] << " ";
+            cout << a[x++][y] << " ";
+        }
  
-    // 输出结果
-    cout << sum << endl;
+    if(n!=1)
+        cout << a[n-1][n-1] << endl;
  
     return 0;
 }
