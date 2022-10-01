@@ -1,8 +1,11 @@
-g++ -std=c++20 main.cpp -o main -g
+. compile.sh
 if $?
 then
 	echo "compilation error"
 else
 	echo "compilation finish"
-	./main
+	./main < 1.in
+	./main < 2.in
+	./main < 3.in
+	./main < 4.in
 fi
